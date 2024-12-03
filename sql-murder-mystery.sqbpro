@@ -1,145 +1,57 @@
-*
+-- Retrieve the report for a murder that occurred on January 15, 2018, in SQL City
+SELECT *
+FROM crime_scene_report
+WHERE date = '20180115' AND type = 'murder' AND city = 'SQL City';
 
-FROM
+-- Identify the resident with the highest address number on Northwestern Dr
+SELECT *
+FROM person
+WHERE address_street_name = 'Northwestern Dr' 
+AND address_number = (SELECT MAX(address_number) FROM person);
 
-crime_scene_report
+-- Find all individuals with the name "Annabel" residing on Franklin Ave
+SELECT *
+FROM person
+WHERE address_street_name = 'Franklin Ave' AND name LIKE '%Annabel%';
 
-WHERE
+-- Fetch details of two specific individuals by their IDs
+SELECT *
+FROM person
+WHERE id IN (14887, 16371);
 
-date = '20180115'  and type = 'murder' and city = 'SQL City'
+-- Retrieve interview records for the two individuals identified earlier
+SELECT *
+FROM interview
+WHERE person_id IN (14887, 16371);
 
-
-
-SELECT
-
-*
-
-FROM
-
-person
-
-WHERE
-
-address_street_name = 'Northwestern Dr' and address_number = (SELECT MAX(address_number)from person)
-
-
-
-SELECT
-
-*
-
-FROM
-
-person
-
-where 
-
-address_street_name = 'Franklin Ave' AND name like '%Annabel%'
-
-
-
-SELECT
-
-*
-
-FROM
-
-person
-
-WHERE
-
-id IN (14887,16371)
-
-
-
-SELECT
-
-*
-
-FROM
-
-interview
-
-WHERE
-
-person_id IN (14887,16371)
-
-
-
-SELECT
-
-*
-
-FROM
-
-get_fit_now_member AS g
-
+-- Find Gold members with an ID starting with "48Z" who checked in on January 9, 2018
+SELECT *
+FROM get_fit_now_member AS g
 JOIN get_fit_now_check_in AS g1
-
 ON g.id = g1.membership_id
+WHERE g.id LIKE '48Z%' AND g.membership_status = 'gold' AND g1.check_in_date = '20180109';
 
-WHERE
-
-g.id LIKE '48Z%' AND g.membership_status = 'gold' AND g1.check_in_date = '20180109'
-
-
-
-SELECT
-
-*
-
-FROM
-
-person AS P
-
+-- Find individuals associated with a vehicle having a plate number ending in "H42W"
+SELECT *
+FROM person AS P
 JOIN drivers_license AS d
-
 ON p.license_id = d.id
+WHERE (p.id = 288119 OR p.id = 67318) AND (d.plate_number LIKE '%H42W%');
 
-where 
+-- Retrieve the interview record for a suspect with ID 67318
+SELECT *
+FROM interview
+WHERE person_id = 67318;
 
-(p.id = 288119 OR p.id = 67318)AND(d.plate_number LIKE '%H42W%')
-
-
-
-SELECT
-
-*
-
-from
-
-interview
-
-WHERE
-
-person_id = 67318
-
-
-
-SELECT
-
-p.name
-
-FROM
-
-person AS p
-
+-- Identify a red-haired female Tesla Model S owner who attended the SQL Symphony Concert
+SELECT p.name
+FROM person AS p
 JOIN drivers_license AS d 
-
 ON p.license_id = d.id
-
 JOIN facebook_event_checkin AS f
-
 ON p.id = f.person_id
-
-WHERE
-
-d.car_make = 'Tesla'
-
+WHERE d.car_make = 'Tesla'
 AND d.car_model = 'Model S'
-
 AND d.hair_color = 'red'
-
 AND d.gender = 'female'
-
-AND f.event_name = 'SQL Symphony Concert'
+AND f.event_name = 'SQL Symphony Concert';
